@@ -21,6 +21,7 @@ from sttn_video_inpaint import build_sttn_model, \
     inpaint_video_with_builded_sttn
 from pytracking.lib.test.evaluation.data import Sequence
 from utils import dilate_mask, show_mask, show_points, get_clicked_point
+from tqdm import tqdm
 
 
 def setup_args(parser):
@@ -342,7 +343,7 @@ if __name__ == "__main__":
     video_raw_p = args.input_video
     frame_raw_glob = None
     fps = args.fps
-    num_frames = 10000
+    num_frames = 1000
     output_dir = args.output_dir
     output_dir = Path(f"{output_dir}")
     frame_mask_dir = output_dir / f"mask_{dilate_kernel_size}"
@@ -354,12 +355,13 @@ if __name__ == "__main__":
 
     # load raw video or raw frames
     if Path(video_raw_p).exists():
-        all_frame = iio.mimread(video_raw_p)
+        all_frame = iio.mimread(video_raw_p, memtest=False)
         fps = imageio.v3.immeta(video_raw_p, exclude_applied=False)["fps"]
 
         # tmp frames
         frame_ps = []
-        for i in range(len(all_frame)):
+        n = num_frames if len(all_frame) > num_frames else len(all_frame)
+        for i in tqdm(range(n)):
             frame_p = str(mkstemp(suffix=f"{i:0>6}.png"))
             frame_ps.append(frame_p)
             iio.imwrite(frame_ps[i], all_frame[i])
@@ -379,7 +381,6 @@ if __name__ == "__main__":
     elif args.coords_type == "key_in":
         point_coords = args.point_coords
     point_coords = np.array([point_coords])
-
     # inference
     device = "cuda" if torch.cuda.is_available() else "cpu"
     model = RemoveAnythingVideo(args)

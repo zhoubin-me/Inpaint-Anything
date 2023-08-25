@@ -101,11 +101,12 @@ if __name__ == "__main__":
     img_stem = Path(args.input_img).stem
     out_dir = Path(args.output_dir) / img_stem
     out_dir.mkdir(parents=True, exist_ok=True)
+    randn = np.random.randint(10000, 99999, (1,))[0]
     for idx, mask in enumerate(masks):
         # path to the results
-        mask_p = out_dir / f"mask_{idx}.png"
-        img_points_p = out_dir / f"with_points.png"
-        img_mask_p = out_dir / f"with_{Path(mask_p).name}"
+        mask_p = out_dir / f"{randn}_mask_{idx}.png"
+        img_points_p = out_dir / f"{randn}_with_points.png"
+        img_mask_p = out_dir / f"{randn}_with_{Path(mask_p).name}"
 
         # save the mask
         save_array_to_img(mask, mask_p)
@@ -125,8 +126,8 @@ if __name__ == "__main__":
 
     # inpaint the masked image
     for idx, mask in enumerate(masks):
-        mask_p = out_dir / f"mask_{idx}.png"
-        img_inpainted_p = out_dir / f"inpainted_with_{Path(mask_p).name}"
+        mask_p = out_dir / f"{randn}_mask_{idx}.png"
+        img_inpainted_p = out_dir / f"{randn}_inpainted_with_{Path(mask_p).name}"
         img_inpainted = inpaint_img_with_lama(
             img, mask, args.lama_config, args.lama_ckpt, device=device)
         save_array_to_img(img_inpainted, img_inpainted_p)
