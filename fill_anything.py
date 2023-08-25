@@ -110,8 +110,8 @@ if __name__ == "__main__":
     for idx, mask in enumerate(masks):
         # path to the results
         mask_p = out_dir / f"{randint}_mask_{idx}.png"
-        img_points_p = out_dir / f"{randint}_mwith_points.png"
-        img_mask_p = out_dir / f"{randint}_mwith_{Path(mask_p).name}"
+        img_points_p = out_dir / f"{randint}_with_points.png"
+        img_mask_p = out_dir / f"{randint}_with_{Path(mask_p).name}"
 
         # save the mask
         save_array_to_img(mask, mask_p)
