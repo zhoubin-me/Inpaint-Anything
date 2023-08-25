@@ -86,6 +86,7 @@ if __name__ == "__main__":
         latest_coords = args.point_coords
     img = load_img_to_array(args.input_img)
 
+
     masks, _, _ = predict_masks_with_sam(
         img,
         [latest_coords],
@@ -104,11 +105,13 @@ if __name__ == "__main__":
     img_stem = Path(args.input_img).stem
     out_dir = Path(args.output_dir) / img_stem
     out_dir.mkdir(parents=True, exist_ok=True)
+
+    randint = np.random.randint(10000, 99999, (1,))[0]
     for idx, mask in enumerate(masks):
         # path to the results
-        mask_p = out_dir / f"mask_{idx}.png"
-        img_points_p = out_dir / f"with_points.png"
-        img_mask_p = out_dir / f"with_{Path(mask_p).name}"
+        mask_p = out_dir / f"{randint}_mask_{idx}.png"
+        img_points_p = out_dir / f"{randint}_mwith_points.png"
+        img_mask_p = out_dir / f"{randint}_mwith_{Path(mask_p).name}"
 
         # save the mask
         save_array_to_img(mask, mask_p)
